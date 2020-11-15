@@ -21,7 +21,7 @@ pipeline{
                 }
             }
         }
-        state('Checkstyle y PMD'){
+        stage('Checkstyle y PMD'){
             input{
                 message "Se van a pasar el checkstyle y el pmd, ¿Desea continuar?"
                 ok "Si"

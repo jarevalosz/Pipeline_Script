@@ -1,8 +1,5 @@
 pipeline{
     agent any
-    parameters {
-        string(name: 'URL', defaultValue: 'https://github.com/jarevalosz/curso_integracion_continua.git', description: '')
-    }
     tools {
         maven 'maven 3.6.3' 
         jdk 'JDK 9.0.4'
@@ -11,7 +8,7 @@ pipeline{
         stage('Descarga'){
             steps{
                 echo 'Descargo proyecto desde GIT: '$url
-                git ${params.URL}
+                git 'https://github.com/jarevalosz/curso_integracion_continua.git'
             }
         }
         stage('Build') {

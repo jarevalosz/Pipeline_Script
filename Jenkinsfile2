@@ -1,0 +1,52 @@
+pipeline{
+    agent any
+    tools {
+        maven 'maven 3.6.3' 
+        jdk 'JDK 9.0.4'
+    }
+    stages{
+        stage('Descarga'){
+            steps{
+                echo 'Descargo proyecto desde GIT'
+                git 'https://github.com/jarevalosz/curso_integracion_continua.git'
+            }
+        }
+        stage('Build') {
+            parallel {
+                stage('Clean') {
+                    steps {
+                        echo 'Paquetizar el proyecto'
+                        sh "mvn clean package"    
+                    }
+                }
+            }
+        }
+        state('Checkstyle y PMD'){
+            input{
+                message "Se van a pasar el checkstyle y el pmd, ¿Desea continuar?"
+                ok "Si"
+            }
+            steps {
+                echo 'Ejecuto el Checkstyle'
+                sh "mvn checkstyle:checkstyle"
+                
+            
+                echo 'Ejecuto el PMD'
+                sh "mvn pmd:pmd"
+            }
+        }
+        
+    }
+    post{
+        success{
+            echo 'Deplegar en servidor Tomcat'
+            deploy adapters: [tomcat8(credentialsId: '49ba6112-e4e1-47f6-b4ad-3a12c35323e7', path: '', url: 'http://localhost:8091/')], contextPath: null, onFailure: false, war: '**/*.war'
+        }
+        failure{
+            echo 'Error durante el proceso'
+        }
+        aborted{
+            echo 'Se para el proceso'
+        }
+    }
+}

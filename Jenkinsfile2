@@ -7,7 +7,7 @@ pipeline{
     stages{
         stage('Descarga'){
             steps{
-                echo 'Descargo proyecto desde GIT'
+                echo 'Descargo proyecto desde GIT: '$url
                 git 'https://github.com/jarevalosz/curso_integracion_continua.git'
             }
         }
